@@ -1,5 +1,6 @@
 const searchForm = document.querySelector(".search");
 const searchResults = document.querySelector(".results__list");
+const searchField = document.querySelector(".search__field");
 let searchQuery = "";
 const App_Id = "9a6e4156";
 const App_Key = "391c5a5c1a1eb301710c9542a1c073ea";
@@ -7,11 +8,20 @@ const App_Key = "391c5a5c1a1eb301710c9542a1c073ea";
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault();
   searchQuery = e.target.querySelector("input").value;
+  clearInput();
+  clearResult();
   fetchAPI();
 });
 
+function clearInput() {
+  searchField.value = "";
+}
+function clearResult() {
+  searchResults.innerHTML = "";
+}
+
 async function fetchAPI() {
-  const baseURL = `https://api.edamam.com/search?app_id=${App_Id}&app_key=${App_Key}&q=pizza&to=30`;
+  const baseURL = `https://api.edamam.com/search?app_id=${App_Id}&app_key=${App_Key}&q=${searchQuery}&to=30`;
   const response = await fetch(baseURL);
   const data = await response.json();
   generateHTML(data.hits);
@@ -22,7 +32,7 @@ function generateHTML(results) {
   results.map((result) => {
     markup += `
       <li>
-          <a class="results__link" href="#${result.recipe.uri}">
+          <a class="results__link" href="#${result.recipe.label}">
               <figure class="results__fig">
                   <img src="${result.recipe.image}" alt="Test">
               </figure>
