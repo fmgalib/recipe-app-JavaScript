@@ -1,4 +1,5 @@
 const searchForm = document.querySelector(".search");
+const resultDiv = document.querySelector(".results");
 const searchResults = document.querySelector(".results__list");
 const searchField = document.querySelector(".search__field");
 let searchQuery = "";
@@ -10,6 +11,7 @@ searchForm.addEventListener("submit", (e) => {
   searchQuery = e.target.querySelector("input").value;
   clearInput();
   clearResult();
+  renderLoader();
   fetchAPI();
 });
 
@@ -45,5 +47,26 @@ function generateHTML(results) {
 
     `;
   });
+  clearLoader();
   searchResults.innerHTML = markup;
+}
+
+const elementString = {
+  loader: "loader",
+};
+
+function renderLoader() {
+  const loader = `
+    <div class="${elementString.loader}">
+      <svg>
+        <use href="img/icons.svg#icon-cw"></use>
+      </svg>
+    </div>
+  `;
+  resultDiv.insertAdjacentHTML("afterbegin", loader);
+}
+
+function clearLoader() {
+  const loader = document.querySelector(`.${elementString.loader}`);
+  if (loader) loader.parentElement.removeChild(loader);
 }
